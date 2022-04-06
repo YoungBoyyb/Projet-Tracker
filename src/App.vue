@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import { ElNotification } from "element-plus";
 import { v4 as uuid } from "@lukeed/uuid";
 import * as TaskService from "./services/TaskService.js";
 import { defineComponent } from "vue";
@@ -34,41 +35,50 @@ import TaskList from "./components/TaskList.vue";
 
 import zhCn from "element-plus/lib/locale/lang/zh-cn";
 
-export default defineComponent({
+export default {
   components: {
-    ElConfigProvider,
     TheMenu,
     TheTopTask,
     TaskList,
   },
-  setup() {
-    return {
-      locale: zhCn,
-    };
-  },
   data() {
     return {
-      tasks: [],
+      tasks: null,
       areTasksLoading: true,
     };
   },
+  watch: {
+    tasks: {
+      // Mise à jour de toutes les tâches en API dès que tasks change
+      deep: true,
+      async handler(newVal, oldVal) {
+        if (newVal !== null && oldVal !== null) {
+          try {
+            await TaskService.updateAll(this.tasks);
+          } catch (e) {
+            console.error(e);
+            this.$notify({
+              title: "Mode hors-ligne",
+              message: `Synchronisation des tâches impossible`,
+              type: "error",
+              offset: 50,
+              duration: 3000,
+            });
+          }
+        }
+      },
+    },
+  },
   methods: {
     async addTask({ name, startTime }) {
-      //Ajout de la tâche en local
+      // Ajout de la tâche
       this.tasks.unshift({
         id: uuid(),
         name,
         startTime,
         endTime: Date.now(),
       });
-      //Mise à jour de toutes les tâches en API
-      try {
-        await TaskService.updateAll(this.tasks);
-      } catch (e) {
-        console.error(e);
-      }
     },
-
     sendRestartTask(taskID) {
       // Récupération du nom de l'ancienne tâche
       let newTaskname = null;
@@ -80,7 +90,6 @@ export default defineComponent({
       // Relancement de la tâche
       this.$refs.TheTopTask.restartTask(newTaskname);
     },
-
     async deleteTask(taskID) {
       // Récupération de l'index de la tâche
       let taskIndex = null;
@@ -89,28 +98,28 @@ export default defineComponent({
           taskIndex = index;
         }
       });
-
-      // Suppression de la tâche en local
+      // Suppression de la tâche
       this.tasks.splice(taskIndex, 1);
-
-      //Mise à jour de toutes les tâches en API
-      try {
-        await TaskService.updateAll(this.tasks);
-      } catch (e) {
-        console.error(e);
-      }
     },
   },
   async created() {
-    //Récupération de toutes les tâches
+    // Récupération de toutes les tâches
     try {
       this.tasks = await TaskService.getAll();
     } catch (e) {
       console.error(e);
+      this.tasks = [];
+      this.$notify({
+        title: "Mode hors-ligne",
+        message: `Récupération des tâches impossible`,
+        type: "error",
+        offset: 50,
+        duration: 3000,
+      });
     }
     this.areTasksLoading = false;
   },
-});
+};
 </script>
 
 <style scoped>
@@ -240,5 +249,11 @@ tr .cell {
   width: 100%;
   text-align: center;
   position: absolute;
+}
+.el-notification__title {
+  font-family: Oswald;
+}
+p {
+  font-family: Oswald;
 }
 </style>
