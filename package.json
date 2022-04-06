@@ -1,0 +1,23 @@
+{
+  "name": "vite-project",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^0.2.7",
+    "@lukeed/uuid": "^2.0.0",
+    "axios": "^0.26.0",
+    "element-plus": "^2.0.2",
+    "vue": "^3.2.25"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^2.2.0",
+    "@vue/devtools": "^6.0.12",
+    "sass": "^1.49.8",
+    "vite": "^2.8.0"
+  }
+}
