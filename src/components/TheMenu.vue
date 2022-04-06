@@ -1,8 +1,8 @@
 <template>
   <el-scrollbar>
-    <el-menu default-active="1">
+    <el-menu :router="true" default-active="/">
       <h3>Vue Tracker</h3>
-      <el-menu-item index="1">
+      <el-menu-item index="/">
         <el-icon
           ><clock /><svg
             class="icon"
@@ -44,7 +44,7 @@
         ></el-icon>
         <span>Catégories</span>
       </el-menu-item>
-      <el-menu-item index="3" disabled>
+      <el-menu-item index="/settings">
         <el-icon
           ><setting /><svg
             class="icon"

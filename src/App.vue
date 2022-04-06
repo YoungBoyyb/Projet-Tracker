@@ -10,6 +10,8 @@
       </el-header>
 
       <el-main>
+        <router-view></router-view>
+
         <TaskList
           :tasks="tasks"
           :areTasksLoading="areTasksLoading"
