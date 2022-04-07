@@ -1,6 +1,6 @@
 <template>
   <el-scrollbar>
-    <el-menu :router="true" default-active="/">
+    <el-menu :router="true" :default-active="$route.path">
       <h3>Vue Tracker</h3>
       <el-menu-item index="/">
         <el-icon
@@ -95,5 +95,9 @@ li.el-menu-item {
 h3 {
   text-align: center;
   color: #f99829;
+}
+li.el-menu-item.is-active {
+  color: white;
+  background-color: #f99829;
 }
 </style>

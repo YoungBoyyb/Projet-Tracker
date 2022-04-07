@@ -1,4 +1,14 @@
 <template>
+  <el-select
+    v-model="sortBy"
+    class="m-2"
+    placeholder="Ordre des tâches"
+    size="large"
+  >
+    <el-option label="La plus récente" value="descending" />
+    <el-option label="La plus ancienne" value="ascending" />
+  </el-select>
+
   <el-table
     :data="tasks"
     stripe
@@ -10,8 +20,10 @@
     element-loading-background="rgba(249, 152, 41, 0.8)"
     :element-loading-svg="svg"
     class="custom-loading-svg"
+    ref="table"
   >
-    <el-table-column prop="name" label="Tâche"> </el-table-column>
+    <el-table-column prop="name" sort-by="startTime" label="Tâche">
+    </el-table-column>
 
     <el-table-column align="right" label="Début et fin" width="150">
       <template #header></template>
@@ -67,6 +79,9 @@ export default {
         hour: "2-digit",
         minute: "2-digit",
       }),
+      defaultSortBy: "descending",
+      sortBy:
+        this.$route.query.sortBy === "ascending" ? "ascending" : "descending",
     };
   },
   props: {
@@ -77,6 +92,20 @@ export default {
     areTasksLoading: {
       type: Boolean,
       default: false,
+    },
+  },
+  watch: {
+    sortBy(newVal) {
+      this.$router.push({
+        query: { sortBy: newVal === this.defaultSortBy ? undefined : newVal },
+      });
+      this.sortTable();
+    },
+    tasks: {
+      deep: true,
+      handler() {
+        this.sortTable();
+      },
     },
   },
   methods: {
@@ -103,6 +132,19 @@ export default {
     copyToClipboard(text) {
       navigator.clipboard.writeText(text);
     },
+    sortTable() {
+      this.$refs.table.sort("name", this.sortBy);
+    },
+  },
+  mounted() {
+    this.sortTable();
   },
 };
 </script>
+
+<style scoped>
+.el-select {
+  float: right;
+  margin: 15px 0px;
+}
+</style>
