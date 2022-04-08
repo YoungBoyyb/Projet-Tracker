@@ -7,6 +7,7 @@ import "element-plus/dist/index.css";
 import App from "./App.vue";
 import HomePage from "./pages/Home.vue";
 import SettingsPage from "./pages/Settings.vue";
+import NotFoundPage from "./pages/NotFound.vue";
 import SettingsApp from "./components/SettingsApp.vue";
 import SettingsUser from "./components/SettingsUser.vue";
 
@@ -15,6 +16,7 @@ const router = createRouter({
   routes: [
     {
       path: "/",
+      alias: "/home",
       name: "Home",
       component: HomePage,
       children: [
@@ -38,6 +40,17 @@ const router = createRouter({
           component: SettingsUser,
         },
       ],
+    },
+    {
+      path: "/notfound",
+      name: "NotFound",
+      component: NotFoundPage,
+    },
+    {
+      path: "/:wrongPath(.*)",
+      redirect: (to) => {
+        return { name: "NotFound", params: { wrongPath: to.params.wrongPath } };
+      },
     },
   ],
 });

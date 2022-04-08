@@ -4,7 +4,10 @@
       :router="true"
       :default-active="$route.matched[0] ? $route.matched[0].path : $route.path"
     >
-      <h3>Vue Tracker</h3>
+      <div class="wrapper">
+        <a class="title-app" href="/"><h3>VUE TRACKER</h3></a>
+      </div>
+
       <el-menu-item index="/">
         <el-icon
           ><clock /><svg
@@ -102,5 +105,85 @@ h3 {
 li.el-menu-item.is-active {
   color: white;
   background-color: #f99829;
+}
+
+// Effet vue tracker menu
+.title-app {
+  color: #f99829;
+  text-decoration: none;
+  transition: 0.4s;
+}
+.title-app:hover {
+  transition: 0.4s;
+}
+
+h3 {
+  font-weight: 500;
+  transition: 0.4s;
+  margin: 0em !important;
+  padding: 1em;
+}
+h3:hover {
+  font-weight: 500;
+  transition: 0.4s;
+
+  margin: 0em !important;
+}
+.wrapper {
+  text-align: center;
+  transition: 0.8s;
+  a {
+    color: #f99829;
+    text-transform: uppercase;
+    background: linear-gradient(
+      to right,
+      #f99829 20%,
+      #000000 60%,
+      #ffffff 20%
+    );
+    font-weight: 500;
+    background-size: auto auto;
+    background-clip: border-box;
+    background-size: 200% auto;
+    color: #f99829;
+    background-clip: text;
+    text-fill-color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textclip 5s linear infinite;
+    display: inline-block;
+  }
+  a:hover {
+    color: #f99829;
+    text-transform: uppercase;
+    background: linear-gradient(
+      to right,
+      #000000 20%,
+      #ffffff 60%,
+      #f99829 20%
+    );
+    font-weight: 500;
+    background-size: auto auto;
+    background-clip: border-box;
+    background-size: 200% auto;
+    color: #f99829;
+    background-clip: text;
+    text-fill-color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textclip 5s linear infinite;
+    display: inline-block;
+  }
+}
+.wrapper:hover {
+  background: #ffffff;
+}
+a.title-app {
+  width: 100%;
+}
+@keyframes textclip {
+  to {
+    background-position: 200% center;
+  }
 }
 </style>
