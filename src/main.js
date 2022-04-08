@@ -7,6 +7,7 @@ import "element-plus/dist/index.css";
 import App from "./App.vue";
 import HomePage from "./pages/Home.vue";
 import SettingsPage from "./pages/Settings.vue";
+import LoginPage from "./pages/Login.vue";
 import NotFoundPage from "./pages/NotFound.vue";
 import SettingsApp from "./components/SettingsApp.vue";
 import SettingsUser from "./components/SettingsUser.vue";
@@ -19,6 +20,7 @@ const router = createRouter({
       alias: "/home",
       name: "Home",
       component: HomePage,
+      meta: { needLoggedIn: false },
       children: [
         {
           path: "/home/:taskID",
@@ -30,16 +32,29 @@ const router = createRouter({
       path: "/settings",
       name: "Settings",
       component: SettingsPage,
+      meta: { needLoggedIn: false },
       children: [
         {
           path: "app",
           component: SettingsApp,
+          meta: { needLoggedIn: false },
         },
         {
           path: "user",
           component: SettingsUser,
+          meta: { needLoggedIn: false },
         },
       ],
+    },
+    {
+      path: "/login",
+      name: "Login",
+      component: LoginPage,
+      beforeEnter: (to, from) => {
+        if (localStorage.getItem("isLoggedIn")) {
+          return false;
+        }
+      },
     },
     {
       path: "/notfound",
@@ -53,6 +68,12 @@ const router = createRouter({
       },
     },
   ],
+});
+
+router.beforeEach((to, from) => {
+  if (to.meta.needLoggedIn && !localStorage.getItem("isLoggedIn")) {
+    return "/login";
+  }
 });
 
 const app = createApp(App);

@@ -273,4 +273,9 @@ span {
   letter-spacing: 1px;
   font-weight: 100;
 }
+// Arrow menu paramètres
+i.el-icon.el-sub-menu__icon-arrow svg.icon {
+  color: #f99829 !important;
+  font-size: 16px;
+}
 </style>
