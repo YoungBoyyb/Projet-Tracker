@@ -169,6 +169,16 @@ tr.el-table__row:hover {
 </style>
 
 <style lang="scss">
+.highlight-line {
+  background-color: #f9982944 !important;
+}
+// :root racine
+:root {
+  --el-text-color-regular: #f99829;
+  --el-popper-border-radius: 0px;
+  --el-color-primary: #f99829;
+}
+//
 @font-face {
   font-family: "Grape Nuts";
   src: url("../font/GrapeNuts-Regular.ttf");
@@ -252,8 +262,15 @@ tr .cell {
 }
 .el-notification__title {
   font-family: Oswald;
+  letter-spacing: 1px;
 }
 p {
   font-family: Oswald;
+  letter-spacing: 1px;
+}
+span {
+  font-family: Oswald;
+  letter-spacing: 1px;
+  font-weight: 100;
 }
 </style>

@@ -81,4 +81,8 @@ export default {
 tr.el-table__row:hover {
   --el-table-text-color: red !important;
 }
+
+h1 {
+  color: #f99829;
+}
 </style>

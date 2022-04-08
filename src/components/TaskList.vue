@@ -1,7 +1,8 @@
 <template>
   <el-select
+    style="--el-border-radius-base: 0px, --el-popper-border-radius: 0px"
     v-model="sortBy"
-    class="m-2"
+    class="m-2 select-taches"
     placeholder="Ordre des tâches"
     size="large"
   >
@@ -11,8 +12,9 @@
 
   <el-table
     :data="tasks"
-    stripe
+    :row-class-name="checkHighlight"
     row-key="id"
+    @row-click="setHighlight"
     empty-text="Aucune tâche"
     style="width: 100%"
     v-loading="areTasksLoading"
@@ -135,6 +137,16 @@ export default {
     sortTable() {
       this.$refs.table.sort("name", this.sortBy);
     },
+    checkHighlight({ row }) {
+      if (this.$route.params.taskID && row.id === this.$route.params.taskID) {
+        return "highlight-line";
+      } else {
+        return "";
+      }
+    },
+    setHighlight(row) {
+      this.$router.push({ path: "/home/" + row.id });
+    },
   },
   mounted() {
     this.sortTable();
@@ -142,7 +154,86 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss">
+.el-input__inner {
+  color: var(--el-input-text-color, var(--el-text-color-regular));
+}
+.el-input {
+  --el-input-text-color: var(--el-color-black);
+}
+.el-select-dropdown__item.selected {
+  color: var(--el-color-black);
+}
+.el-select .el-input.is-focus .el-input__inner {
+  --el-select-input-focus-border-color: var(--el-color-black);
+}
+.el-select .el-input__inner:focus {
+  border-color: var(--el-color-black) !important;
+}
+.el-select:hover:not(.el-select--disabled) .el-input__inner {
+  border-color: var(--el-text-color-regular);
+}
+.el-select .el-input .el-select__caret {
+  color: var(--el-color-black);
+}
+.el-select-dropdown__item.hover,
+.el-select-dropdown__item {
+  transition: 0.4s;
+}
+.el-select-dropdown__item.hover,
+.el-select-dropdown__item:hover {
+  background-color: #00000014;
+  transition: 0.4s;
+}
+.el-select-dropdown__wrap.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default {
+  background: white;
+}
+.el-select-dropdown__wrap.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default
+  .el-select-dropdown__list {
+  margin: 0px !important;
+}
+.el-input {
+  --el-input-border-radius: var(--el-border-radius-base);
+}
+.layout-container-demo .el-header {
+  position: relative;
+  background-color: #b3c0d1;
+  color: var(--el-text-color-primary);
+}
+.layout-container-demo {
+  width: 240px;
+  color: var(--el-text-color-primary);
+  background: #fff !important;
+  border-right: solid 1px #e6e6e6;
+  box-sizing: border-box;
+}
+.layout-container-demo .el-menu {
+  border-right: none;
+}
+.layout-container-demo .el-main {
+  padding: 0;
+}
+.layout-container-demo .toolbar {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+}
+.el-table {
+  --el-table-tr-bg-color: transparent;
+  --el-table-border-color: #f99829;
+  --el-table-border: 1px solid #f99829;
+  --el-table-text-color: #f99829;
+  --el-table-header-bg-color: #f99829 !important;
+  --el-table-header-text-color: white;
+  --el-table-row-hover-bg-color: var(--el-bg-color);
+  --el-table-current-row-bg-color: var(--el-color-primary-light-9);
+}
+tr.el-table__row:hover {
+  --el-table-text-color: red !important;
+}
 .el-select {
   float: right;
   margin: 15px 0px;

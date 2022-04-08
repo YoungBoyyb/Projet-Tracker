@@ -7,6 +7,8 @@ import "element-plus/dist/index.css";
 import App from "./App.vue";
 import HomePage from "./pages/Home.vue";
 import SettingsPage from "./pages/Settings.vue";
+import SettingsApp from "./components/SettingsApp.vue";
+import SettingsUser from "./components/SettingsUser.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -15,11 +17,27 @@ const router = createRouter({
       path: "/",
       name: "Home",
       component: HomePage,
+      children: [
+        {
+          path: "/home/:taskID",
+          component: HomePage,
+        },
+      ],
     },
     {
       path: "/settings",
       name: "Settings",
       component: SettingsPage,
+      children: [
+        {
+          path: "app",
+          component: SettingsApp,
+        },
+        {
+          path: "user",
+          component: SettingsUser,
+        },
+      ],
     },
   ],
 });
