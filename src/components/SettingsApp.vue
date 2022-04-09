@@ -3,13 +3,20 @@
   <el-row>
     <el-col :offset="6" :span="12">
       <p class="para-settings-app">Clé secrète de votre API JSONbin.io :</p>
-      <el-input placeholder="API KEY" v-model="inputValueJsonBinKey"></el-input>
+      <el-input
+        placeholder="Entrer votre API KEY"
+        v-model="inputValueJsonBinKey"
+      ></el-input>
       <p class="para-settings-app">ID de votre bin :</p>
-      <el-input placeholder="BIN ID" v-model="inputValueJsonBinID"></el-input>
+      <el-input
+        placeholder="Entrer votre BIN ID"
+        v-model="inputValueJsonBinID"
+      ></el-input>
       <el-button
         type="primary"
         @click="updateApiValues"
         :loading="areNewValuesBeingTested"
+        class="bouton-confirmation"
         >Confirmer</el-button
       >
     </el-col>
@@ -86,7 +93,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .titre-settings-app {
   color: #f99829;
 }
@@ -98,5 +105,15 @@ p {
 }
 .el-button {
   margin-top: 20px;
+}
+input.el-input__inner {
+  border-radius: 0px;
+}
+.bouton-confirmation {
+  border-radius: 50px;
+  padding: 20px 25px;
+}
+.bouton-confirmation span {
+  font-size: 16px;
 }
 </style>

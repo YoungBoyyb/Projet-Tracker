@@ -39,7 +39,7 @@ h2 {
 .button-error-404 {
   font-size: 16px;
 }
-button.el-button.el-button--primary.el-button--default.is-round.button-error-404 {
+.button-error-404 {
   padding: 20px 25px;
 }
 </style>

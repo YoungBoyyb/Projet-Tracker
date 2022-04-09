@@ -182,6 +182,7 @@ tr.el-table__row:hover {
   --el-text-color-regular: #f99829;
   --el-popper-border-radius: 0px;
   --el-color-primary: #f99829;
+  --el-text-color-placeholder: #00000054;
 }
 //
 @font-face {
