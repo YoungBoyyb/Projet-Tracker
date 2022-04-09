@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Paramètres</h1>
-    <router-view></router-view>
+    <router-view @updateTasks="$emit('updateTasks')"></router-view>
   </div>
 </template>
 

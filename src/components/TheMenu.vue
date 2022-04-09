@@ -2,7 +2,12 @@
   <el-scrollbar>
     <el-menu
       :router="true"
-      :default-active="$route.matched[0] ? $route.matched[0].path : $route.path"
+      :default-active="
+        ($route.matched[0] && $route.matched[0].path == '/') ||
+        $route.path == '/home'
+          ? '/'
+          : $route.path
+      "
     >
       <div class="wrapper">
         <a class="title-app" href="/"><h3>VUE TRACKER</h3></a>
@@ -201,6 +206,7 @@ li.el-menu-item {
 }
 li.el-menu-item:hover {
   background: white;
+  color: #f99829;
 }
 li.el-sub-menu.is-opened {
   background: white;

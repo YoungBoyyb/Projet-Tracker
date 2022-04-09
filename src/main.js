@@ -6,11 +6,12 @@ import "element-plus/dist/index.css";
 
 import App from "./App.vue";
 import HomePage from "./pages/Home.vue";
-import SettingsPage from "./pages/Settings.vue";
-import LoginPage from "./pages/Login.vue";
-import NotFoundPage from "./pages/NotFound.vue";
-import SettingsApp from "./components/SettingsApp.vue";
-import SettingsUser from "./components/SettingsUser.vue";
+
+const LoginPage = () => import("./pages/Login.vue");
+const SettingsPage = () => import("./pages/Settings.vue");
+const NotFoundPage = () => import("./pages/NotFound.vue");
+const SettingsApp = () => import("./components/SettingsApp.vue");
+const SettingsUser = () => import("./components/SettingsUser.vue");
 
 const router = createRouter({
   history: createWebHistory(),
@@ -20,7 +21,7 @@ const router = createRouter({
       alias: "/home",
       name: "Home",
       component: HomePage,
-      meta: { needLoggedIn: false },
+      meta: { needJsonBin: true },
       children: [
         {
           path: "/home/:taskID",
@@ -32,17 +33,17 @@ const router = createRouter({
       path: "/settings",
       name: "Settings",
       component: SettingsPage,
-      meta: { needLoggedIn: false },
+      meta: { needJsonBin: false },
       children: [
         {
           path: "app",
           component: SettingsApp,
-          meta: { needLoggedIn: false },
+          meta: { needJsonBin: false },
         },
         {
           path: "user",
           component: SettingsUser,
-          meta: { needLoggedIn: false },
+          meta: { needJsonBin: false },
         },
       ],
     },
@@ -51,7 +52,7 @@ const router = createRouter({
       name: "Login",
       component: LoginPage,
       beforeEnter: (to, from) => {
-        if (localStorage.getItem("isLoggedIn")) {
+        if (localStorage.getItem("jsonBinAccess")) {
           return false;
         }
       },
@@ -71,8 +72,9 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from) => {
-  if (to.meta.needLoggedIn && !localStorage.getItem("isLoggedIn")) {
-    return "/login";
+  /* global localStorage */
+  if (to.meta.needJsonBin && !localStorage.getItem("jsonBinAccess")) {
+    return "/settings/app";
   }
 });
 
