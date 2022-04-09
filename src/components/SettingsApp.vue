@@ -1,10 +1,10 @@
 <template>
-  <h2>Application</h2>
+  <h2 class="titre-settings-app">Application</h2>
   <el-row>
     <el-col :offset="6" :span="12">
-      <p>Clé secrète de votre API JSONbin.io :</p>
+      <p class="para-settings-app">Clé secrète de votre API JSONbin.io :</p>
       <el-input placeholder="API KEY" v-model="inputValueJsonBinKey"></el-input>
-      <p>ID de votre bin :</p>
+      <p class="para-settings-app">ID de votre bin :</p>
       <el-input placeholder="BIN ID" v-model="inputValueJsonBinID"></el-input>
       <el-button
         type="primary"
@@ -87,6 +87,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.titre-settings-app {
+  color: #f99829;
+}
+.para-settings-app {
+  color: #f99829;
+}
 p {
   text-align: left;
 }

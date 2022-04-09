@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Utilisateurs</h2>
+    <h2 class="titre-settings-user">Utilisateurs</h2>
   </div>
 </template>
 
@@ -8,4 +8,8 @@
 export default {};
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.titre-settings-user {
+  color: #f99829;
+}
+</style>
