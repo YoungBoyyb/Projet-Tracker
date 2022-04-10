@@ -92,7 +92,11 @@ export default {
   },
 };
 </script>
-
+<style scoped>
+.el-button {
+  margin-top: 20px;
+}
+</style>
 <style lang="scss">
 .titre-settings-app {
   color: #f99829;
@@ -103,9 +107,7 @@ export default {
 p {
   text-align: left;
 }
-.el-button {
-  margin-top: 20px;
-}
+
 input.el-input__inner {
   border-radius: 0px;
 }
