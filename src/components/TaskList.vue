@@ -1,8 +1,8 @@
 <template>
   <el-select
-    style="--el-border-radius-base: 0px, --el-popper-border-radius: 0px"
+    style="--el-border-radius-base: 0px, --el-popper-border-radius: 0px, "
     v-model="sortBy"
-    class="m-2 select-taches"
+    class="m-2 select-taches --el-color-white"
     placeholder="Ordre des tâches"
     size="large"
   >
@@ -144,6 +144,17 @@ export default {
   },
 };
 </script>
+<style>
+.el-select .el-input .el-select__caret {
+  color: black !important;
+}
+input.el-input__inner {
+  color: black;
+}
+li.el-select-dropdown__item.selected span {
+  color: white !important;
+}
+</style>
 
 <style lang="scss" scoped>
 .el-input__inner {

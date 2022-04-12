@@ -150,6 +150,7 @@ tr.el-table__row:hover {
   --el-popper-border-radius: 0px;
   --el-color-primary: #f99829;
   --el-text-color-placeholder: #00000054;
+  --el-input-text-color: black !important;
 }
 //
 @font-face {
