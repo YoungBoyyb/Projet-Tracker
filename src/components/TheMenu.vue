@@ -10,7 +10,9 @@
       "
     >
       <div class="wrapper">
-        <a class="title-app" href="/"><h3>VUE TRACKER</h3></a>
+        <a class="title-app" href="/"
+          ><h3>VUE TRACKER {{ countPlusOne }}</h3></a
+        >
       </div>
 
       <el-menu-item index="/">
@@ -86,6 +88,8 @@ import { ElConfigProvider } from "element-plus";
 
 import zhCn from "element-plus/lib/locale/lang/zh-cn";
 
+import { mapState } from "vuex";
+
 export default defineComponent({
   components: {
     ElConfigProvider,
@@ -94,6 +98,12 @@ export default defineComponent({
     return {
       locale: zhCn,
     };
+  },
+  computed: {
+    ...mapState(["count"]),
+    countPlusOne() {
+      return this.count;
+    },
   },
 });
 </script>

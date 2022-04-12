@@ -2,11 +2,8 @@
   <div>
     <h1>Accueil</h1>
     <TaskList
-      :tasks="tasks || []"
-      :areTasksLoading="areTasksLoading"
       v-on="{
         restart: sendRestart,
-        delete: sendDelete,
       }"
     />
   </div>
@@ -20,28 +17,16 @@ export default {
     TaskList,
   },
   emits: ["restart", "delete"],
-  props: {
-    tasks: {
-      type: Array,
-      default: [],
-    },
-    areTasksLoading: {
-      type: Boolean,
-      default: false,
-    },
-  },
+
   methods: {
     sendRestart(data) {
       this.$emit("restart", data);
-    },
-    sendDelete(data) {
-      this.$emit("delete", data);
     },
   },
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .layout-container-demo .el-header {
   position: relative;
   background-color: #b3c0d1;

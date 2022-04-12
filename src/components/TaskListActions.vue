@@ -42,7 +42,7 @@
 
   <el-button
     size="mini"
-    @click="sendDelete"
+    @click="deleteTask(taskID)"
     class="button-stop"
     type="danger"
     circle
@@ -62,6 +62,8 @@
   ></el-button>
 </template>
 <script>
+import { mapActions } from "vuex";
+
 export default {
   props: {
     taskID: {
@@ -69,13 +71,11 @@ export default {
       required: true,
     },
   },
-  emits: ["restart", "delete", "copyTaskname"],
+  emits: ["restart", "copyTaskname"],
   methods: {
+    ...mapActions(["deleteTask"]),
     sendRestart() {
       this.$emit("restart", this.taskID);
-    },
-    sendDelete() {
-      this.$emit("delete", this.taskID);
     },
     sendCopyTaskname() {
       this.$emit("copyTaskname");

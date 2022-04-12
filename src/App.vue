@@ -5,18 +5,12 @@
     </el-aside>
 
     <el-container>
-      <el-header height="60px">
-        <TheTopTask ref="TheTopTask" @newTask="addTask($event)" />
-      </el-header>
+      <el-header height="60px"> <TheTopTask ref="TheTopTask" /> </el-header>
 
       <el-main>
         <router-view
-          :tasks="tasks || []"
-          :areTasksLoading="areTasksLoading"
           v-on="{
             restart: sendRestartTask,
-            delete: deleteTask,
-            updateTasks: getAllTasks,
           }"
         ></router-view>
       </el-main>
@@ -25,9 +19,9 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 import { ElNotification } from "element-plus";
-import { v4 as uuid } from "@lukeed/uuid";
-import * as TaskService from "./services/TaskService.js";
+
 import { defineComponent } from "vue";
 import { ElConfigProvider } from "element-plus";
 import TheMenu from "./components/TheMenu.vue";
@@ -42,11 +36,8 @@ export default {
     TheTopTask,
     TaskList,
   },
-  data() {
-    return {
-      tasks: null,
-      areTasksLoading: true,
-    };
+  computed: {
+    ...mapState(["tasks", "areTasksLoading"]),
   },
   watch: {
     tasks: {
@@ -55,7 +46,7 @@ export default {
       async handler(newVal, oldVal) {
         if (newVal !== null && oldVal !== null) {
           try {
-            await TaskService.updateAll(this.tasks);
+            await this.updateAllTasks();
           } catch (e) {
             console.error(e);
             this.$notify({
@@ -71,15 +62,8 @@ export default {
     },
   },
   methods: {
-    async addTask({ name, startTime }) {
-      // Ajout de la tâche
-      this.tasks.unshift({
-        id: uuid(),
-        name,
-        startTime,
-        endTime: Date.now(),
-      });
-    },
+    ...mapActions(["fetchAllTasks", "updateAllTasks"]),
+
     sendRestartTask(taskID) {
       // Récupération du nom de l'ancienne tâche
       let newTaskname = null;
@@ -91,38 +75,21 @@ export default {
       // Relancement de la tâche
       this.$refs.TheTopTask.restartTask(newTaskname);
     },
-    async deleteTask(taskID) {
-      // Récupération de l'index de la tâche
-      let taskIndex = null;
-      this.tasks.forEach((task, index) => {
-        if (task.id === taskID) {
-          taskIndex = index;
-        }
-      });
-      // Suppression de la tâche
-      this.tasks.splice(taskIndex, 1);
-    },
-    async getAllTasks() {
-      this.areTasksLoading = true;
-      try {
-        this.tasks = await TaskService.getAll();
-      } catch (e) {
-        console.error(e);
-        this.tasks = [];
-        this.$notify({
-          title: "Mode hors-ligne",
-          message: `Récupération des tâches impossible`,
-          type: "error",
-          offset: 50,
-          duration: 3000,
-        });
-      }
-      this.areTasksLoading = false;
-    },
   },
   async created() {
     // Récupération de toutes les tâches
-    await this.getAllTasks();
+    try {
+      await this.fetchAllTasks();
+    } catch (e) {
+      console.error(e);
+      this.$notify({
+        title: "Mode hors-ligne",
+        message: `Récupération des tâches impossible`,
+        type: "error",
+        offset: 50,
+        duration: 3000,
+      });
+    }
   },
 };
 </script>
@@ -234,6 +201,9 @@ input {
 tr .cell {
   display: flex;
 }
+.el-button {
+  transition: 0.4s !important;
+}
 
 .el-button.button-copy {
   background-color: #f99829;
@@ -252,12 +222,12 @@ tr .cell {
 }
 
 .el-loading-spinner .path {
-  stroke: black;
+  stroke: black !important;
 }
 .el-loading-spinner .el-loading-text {
-  color: black;
-  margin: 0px 0;
-  font-size: 13px;
+  color: black !important;
+  margin: 0px 0 !important;
+  font-size: 16px !important;
 }
 .el-loading-spinner {
   top: 50%;

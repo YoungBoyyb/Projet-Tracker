@@ -24,10 +24,8 @@
 </template>
 
 <script>
-import {
-  getAll as getAllTasks,
-  updateAxiosInstance,
-} from "../services/TaskService.js";
+import { mapActions } from "vuex";
+import { updateAxiosInstance } from "../services/TaskService.js";
 
 export default {
   data() {
@@ -39,6 +37,7 @@ export default {
   },
   emits: ["updateTasks"],
   methods: {
+    ...mapActions(["fetchAllTasks"]),
     async updateApiValues() {
       // Mise à jour des valeurs de JSONBin.io
       this.areNewValuesBeingTested = true;
@@ -56,9 +55,8 @@ export default {
       // Tests de la connexion avec JSONBin.io
       updateAxiosInstance();
       try {
-        await getAllTasks();
+        await this.fetchAllTasks();
         localStorage.setItem("jsonBinAccess", true);
-        this.$emit("updateTasks");
         this.$notify({
           title: "Succès",
           message: `Vos clés sont enregistrés dans ce navigateur`,
@@ -112,8 +110,17 @@ input.el-input__inner {
   border-radius: 0px;
 }
 .bouton-confirmation {
+  background: #f99829;
+  border: 1px solid #f99829;
   border-radius: 50px;
   padding: 20px 25px;
+  transition: 0.4 !important;
+}
+.el-button:focus,
+.el-button:hover {
+  background-color: white;
+  color: black;
+  border-color: white;
 }
 .bouton-confirmation span {
   font-size: 16px;

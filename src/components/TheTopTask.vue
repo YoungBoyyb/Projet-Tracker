@@ -56,6 +56,8 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   data() {
     return {
@@ -67,6 +69,7 @@ export default {
       errorMsg: null,
     };
   },
+
   computed: {
     currentDuration() {
       if (this.startTime && this.nowTime) {
@@ -106,6 +109,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(["addTask"]),
     startTask() {
       // Vérifications
       if (this.taskname.length === 0) {
@@ -129,7 +133,7 @@ export default {
         return;
       }
       // Envoie de la nouvelle tâche à ajouter
-      this.$emit("newTask", {
+      this.addTask({
         name: this.taskname,
         startTime: this.startTime,
       });

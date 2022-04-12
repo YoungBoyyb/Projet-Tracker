@@ -11,7 +11,7 @@
   </el-select>
 
   <el-table
-    :data="tasks"
+    :data="tasks || []"
     :row-class-name="checkHighlight"
     row-key="id"
     @row-click="setHighlight"
@@ -49,7 +49,6 @@
           :taskID="scope.row.id"
           v-on="{
             restart: sendRestart,
-            delete: sendDelete,
           }"
           @copyTaskname="copyToClipboard(scope.row.name)"
         />
@@ -59,6 +58,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import TaskListActions from "./TaskListActions.vue";
 
 const svg = `
@@ -86,16 +86,10 @@ export default {
         this.$route.query.sortBy === "ascending" ? "ascending" : "descending",
     };
   },
-  props: {
-    tasks: {
-      type: Array,
-      default: [],
-    },
-    areTasksLoading: {
-      type: Boolean,
-      default: false,
-    },
+  computed: {
+    ...mapState(["tasks", "areTasksLoading"]),
   },
+
   watch: {
     sortBy(newVal) {
       this.$router.push({
@@ -128,9 +122,6 @@ export default {
     sendRestart(data) {
       this.$emit("restart", data);
     },
-    sendDelete(data) {
-      this.$emit("delete", data);
-    },
     copyToClipboard(text) {
       navigator.clipboard.writeText(text);
     },
@@ -154,7 +145,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .el-input__inner {
   color: var(--el-input-text-color, var(--el-text-color-regular));
 }
