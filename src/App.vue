@@ -8,22 +8,15 @@
       <el-header height="60px"> <TheTopTask ref="TheTopTask" /> </el-header>
 
       <el-main>
-        <router-view
-          v-on="{
-            restart: sendRestartTask,
-          }"
-        ></router-view>
+        <router-view></router-view>
       </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
-import { ElNotification } from "element-plus";
+import { mapState, mapActions, mapMutations } from "vuex";
 
-import { defineComponent } from "vue";
-import { ElConfigProvider } from "element-plus";
 import TheMenu from "./components/TheMenu.vue";
 import TheTopTask from "./components/TheTopTask.vue";
 import TaskList from "./components/TaskList.vue";
@@ -37,7 +30,9 @@ export default {
     TaskList,
   },
   computed: {
-    ...mapState(["tasks", "areTasksLoading"]),
+    ...mapState({
+      tasks: (state) => state.tasks.tasks,
+    }),
   },
   watch: {
     tasks: {
@@ -49,12 +44,9 @@ export default {
             await this.updateAllTasks();
           } catch (e) {
             console.error(e);
-            this.$notify({
+            this.sendError({
               title: "Mode hors-ligne",
               message: `Synchronisation des tâches impossible`,
-              type: "error",
-              offset: 50,
-              duration: 3000,
             });
           }
         }
@@ -62,32 +54,26 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["fetchAllTasks", "updateAllTasks"]),
-
-    sendRestartTask(taskID) {
-      // Récupération du nom de l'ancienne tâche
-      let newTaskname = null;
-      this.tasks.forEach((task) => {
-        if (task.id === taskID) {
-          newTaskname = task.name;
-        }
-      });
-      // Relancement de la tâche
-      this.$refs.TheTopTask.restartTask(newTaskname);
-    },
+    ...mapActions({
+      fetchAllTasks: "tasks/fetchAllTasks",
+      updateAllTasks: "tasks/updateAllTasks",
+      sendError: "notifications/sendError",
+    }),
+    ...mapMutations({
+      SET_NOTIFIER: "notifications/SET_NOTIFIER",
+    }),
   },
   async created() {
+    // Mise en place du système de notification
+    this.SET_NOTIFIER(this.$notify);
     // Récupération de toutes les tâches
     try {
       await this.fetchAllTasks();
     } catch (e) {
       console.error(e);
-      this.$notify({
+      this.sendError({
         title: "Mode hors-ligne",
         message: `Récupération des tâches impossible`,
-        type: "error",
-        offset: 50,
-        duration: 3000,
       });
     }
   },

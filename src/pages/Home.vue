@@ -1,11 +1,7 @@
 <template>
   <div>
     <h1>Accueil</h1>
-    <TaskList
-      v-on="{
-        restart: sendRestart,
-      }"
-    />
+    <TaskList />
   </div>
 </template>
 
@@ -17,12 +13,6 @@ export default {
     TaskList,
   },
   emits: ["restart", "delete"],
-
-  methods: {
-    sendRestart(data) {
-      this.$emit("restart", data);
-    },
-  },
 };
 </script>
 

@@ -10,67 +10,55 @@
     <el-option label="La plus ancienne" value="ascending" />
   </el-select>
 
-  <el-table
-    :data="tasks || []"
-    :row-class-name="checkHighlight"
-    row-key="id"
-    @row-click="setHighlight"
-    empty-text="Aucune tâche"
-    style="width: 100%"
-    v-loading="areTasksLoading"
-    element-loading-text="Veuillez patienter..."
-    element-loading-background="rgba(249, 152, 41, 0.8)"
-    :element-loading-svg="svg"
-    class="custom-loading-svg"
-    ref="table"
-  >
-    <el-table-column prop="name" sort-by="startTime" label="Tâche">
-    </el-table-column>
+  <div v-for="(dayTasks, dayTS) in tasksByDay" :key="dayTS">
+    <h3 class="h3-date">{{ fullDateFormatter.format(dayTS) }}</h3>
+    <el-table
+      :data="dayTasks"
+      :row-class-name="checkHighlight"
+      row-key="id"
+      @row-click="setHighlight"
+      empty-text="Aucune tâche"
+      style="width: 100%"
+      v-loading="areTasksLoading"
+      element-loading-text="Veuillez patienter..."
+      element-loading-background="rgba(249, 152, 41, 0.8)"
+      :element-loading-svg="svg"
+      class="custom-loading-svg"
+      :ref="dayTS"
+    >
+      <el-table-column prop="name" sort-by="startTime" label="Tâche">
+      </el-table-column>
 
-    <el-table-column align="right" label="Début et fin" width="150">
-      <template #header></template>
-      <template #default="scope">
-        {{ formatTimestamp(scope.row.startTime) }} -
-        {{ formatTimestamp(scope.row.endTime) }}
-      </template>
-    </el-table-column>
+      <el-table-column align="right" label="Début et fin" width="150">
+        <template #header></template>
+        <template #default="scope">
+          {{ formatTimestamp(scope.row.startTime) }} -
+          {{ formatTimestamp(scope.row.endTime) }}
+        </template>
+      </el-table-column>
 
-    <el-table-column align="right" label="Durée" width="100">
-      <template #header></template>
-      <template #default="scope">
-        {{ durationBetweenTimestamps(scope.row.startTime, scope.row.endTime) }}
-      </template>
-    </el-table-column>
+      <el-table-column align="right" label="Durée" width="100">
+        <template #header></template>
+        <template #default="scope">
+          {{
+            durationBetweenTimestamps(scope.row.startTime, scope.row.endTime)
+          }}
+        </template>
+      </el-table-column>
 
-    <el-table-column align="right" label="Actions" width="150">
-      <template #header></template>
-      <template #default="scope">
-        <TaskListActions
-          :taskID="scope.row.id"
-          v-on="{
-            restart: sendRestart,
-          }"
-          @copyTaskname="copyToClipboard(scope.row.name)"
-        />
-      </template>
-    </el-table-column>
-  </el-table>
+      <el-table-column align="right" label="Actions" width="150">
+        <template #header></template>
+        <template #default="scope">
+          <TaskListActions :taskID="scope.row.id" :taskname="scope.row.name" />
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import TaskListActions from "./TaskListActions.vue";
-
-const svg = `
-        <path class="path" d="
-          M 30 15
-          L 28 17
-          M 25.61 25.61
-          A 15 15, 0, 0, 1, 15 30
-          A 15 15, 0, 1, 1, 27.99 7.5
-          L 15 15
-        " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>`;
-
 export default {
   components: {
     TaskListActions,
@@ -81,15 +69,20 @@ export default {
         hour: "2-digit",
         minute: "2-digit",
       }),
+      fullDateFormatter: Intl.DateTimeFormat("fr", { dateStyle: "full" }),
       defaultSortBy: "descending",
       sortBy:
         this.$route.query.sortBy === "ascending" ? "ascending" : "descending",
     };
   },
   computed: {
-    ...mapState(["tasks", "areTasksLoading"]),
+    ...mapState({
+      areTasksLoading: (state) => state.tasks.areTasksLoading,
+    }),
+    ...mapGetters({
+      tasksByDay: "tasks/tasksByDay",
+    }),
   },
-
   watch: {
     sortBy(newVal) {
       this.$router.push({
@@ -97,10 +90,12 @@ export default {
       });
       this.sortTable();
     },
-    tasks: {
+    tasksByDay: {
       deep: true,
       handler() {
-        this.sortTable();
+        this.$nextTick(() => {
+          this.sortTable();
+        });
       },
     },
   },
@@ -119,14 +114,10 @@ export default {
         "0"
       )}:${String(seconds).padStart(2, "0")}`;
     },
-    sendRestart(data) {
-      this.$emit("restart", data);
-    },
-    copyToClipboard(text) {
-      navigator.clipboard.writeText(text);
-    },
     sortTable() {
-      this.$refs.table.sort("name", this.sortBy);
+      for (let dayTS in this.tasksByDay) {
+        this.$refs[dayTS].sort("name", this.sortBy);
+      }
     },
     checkHighlight({ row }) {
       if (this.$route.params.taskID && row.id === this.$route.params.taskID) {
@@ -144,6 +135,7 @@ export default {
   },
 };
 </script>
+
 <style>
 .el-select .el-input .el-select__caret {
   color: black !important;
@@ -236,8 +228,12 @@ li.el-select-dropdown__item.selected span {
 tr.el-table__row:hover {
   --el-table-text-color: red !important;
 }
-.el-select {
-  float: right;
-  margin: 15px 0px;
+
+.h3-date {
+  text-align: left;
+  text-transform: capitalize;
+  color: white;
+  font-weight: 400;
+  font-size: 2vh;
 }
 </style>

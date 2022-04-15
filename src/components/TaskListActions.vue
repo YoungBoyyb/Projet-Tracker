@@ -1,5 +1,9 @@
 <template>
-  <el-button size="mini" @click="sendCopyTaskname" class="button-copy" circle
+  <el-button
+    size="mini"
+    @click="copyToClipboard(taskname)"
+    class="button-copy"
+    circle
     ><el-icon
       ><copy-document /><svg
         class="icon"
@@ -21,7 +25,7 @@
 
   <el-button
     size="mini"
-    @click="sendRestart"
+    @click="restartTask(taskname)"
     type="primary"
     class="button-play"
     circle
@@ -63,22 +67,29 @@
 </template>
 <script>
 import { mapActions } from "vuex";
-
 export default {
   props: {
     taskID: {
       type: String,
       required: true,
     },
-  },
-  emits: ["restart", "copyTaskname"],
-  methods: {
-    ...mapActions(["deleteTask"]),
-    sendRestart() {
-      this.$emit("restart", this.taskID);
+    taskname: {
+      type: String,
+      required: true,
     },
-    sendCopyTaskname() {
-      this.$emit("copyTaskname");
+  },
+  methods: {
+    ...mapActions({
+      deleteTask: "tasks/deleteTask",
+      restartTask: "tasks/restartTask",
+      sendSuccess: "notifications/sendSuccess",
+    }),
+    copyToClipboard(text) {
+      navigator.clipboard.writeText(text);
+      this.sendSuccess({
+        title: "Succès",
+        message: `Le nom de cette tâche a bien été copié`,
+      });
     },
   },
 };

@@ -11,7 +11,7 @@
       <el-button
         class="button-play"
         v-if="!isTaskInProgress"
-        @click="startTask"
+        @click="beforeStartTask"
         type="primary"
         :icon="Edit"
         circle
@@ -32,7 +32,7 @@
       <el-button
         class="button-stop"
         v-else
-        @click="stopTask"
+        @click="beforeStopTask"
         type="danger"
         :icon="Edit"
         circle
@@ -56,21 +56,28 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-
+import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
-      taskname: "",
-      isTaskInProgress: false,
-      startTime: null,
       nowTime: null,
       intervalEverySecond: null,
       errorMsg: null,
     };
   },
-
   computed: {
+    ...mapState({
+      startTime: (state) => state.tasks.currentStartTime,
+      isTaskInProgress: (state) => state.tasks.isTaskInProgress,
+    }),
+    taskname: {
+      get() {
+        return this.$store.state.tasks.currentTaskname;
+      },
+      set(value) {
+        this.$store.commit("tasks/SET_CURRENT_TASKNAME", value);
+      },
+    },
     currentDuration() {
       if (this.startTime && this.nowTime) {
         return this.durationBetweenTimestamps(this.startTime, this.nowTime);
@@ -82,35 +89,35 @@ export default {
   watch: {
     isTaskInProgress(isInProgress) {
       if (isInProgress) {
+        this.nowTime = Date.now();
         this.intervalEverySecond = setInterval(() => {
           this.nowTime = Date.now();
         }, 1000);
       } else {
+        this.errorMsg = null;
+        this.nowTime = null;
         clearInterval(this.intervalEverySecond);
       }
     },
     errorMsg(newVal) {
       // Notification en cas d'erreur
       if (newVal !== null) {
-        this.$notify({
+        this.sendWarning({
           title: "Attention",
           message: this.errorMsg,
-          type: "warning",
-          offset: 50,
-          duration: 3000,
-          onClose: () => {
-            // Pour que la même erreur puisse de nouveau être possible
-            if (this.errorMsg === newVal) {
-              this.errorMsg = null;
-            }
-          },
         });
+        this.errorMsg = null;
       }
     },
   },
   methods: {
-    ...mapActions(["addTask"]),
-    startTask() {
+    ...mapActions({
+      addTask: "tasks/addTask",
+      startTask: "tasks/startTask",
+      stopTask: "tasks/stopTask",
+      sendWarning: "notifications/sendWarning",
+    }),
+    beforeStartTask() {
       // Vérifications
       if (this.taskname.length === 0) {
         this.errorMsg = "Le nom d'une tâche ne peut pas être vide";
@@ -122,44 +129,23 @@ export default {
         this.errorMsg = null;
       }
       // Début de la tâche
-      this.isTaskInProgress = true;
-      this.startTime = Date.now();
-      this.nowTime = Date.now();
+      this.startTask();
     },
-    stopTask() {
+    beforeStopTask() {
       // Vérifications
       if (!this.isTaskInProgress) {
         this.errorMsg = "Aucune tâche n'est en cours";
         return;
       }
       // Envoie de la nouvelle tâche à ajouter
-      this.addTask({
-        name: this.taskname,
-        startTime: this.startTime,
-      });
-      // Fin de la tâche
-      this.isTaskInProgress = false;
-      this.errorMsg = null;
-      this.nowTime = null;
-      this.taskname = "";
+      this.stopTask();
     },
     toggleTask() {
       if (this.isTaskInProgress) {
-        this.stopTask();
+        this.beforeStopTask();
       } else {
-        this.startTask();
+        this.beforeStartTask();
       }
-    },
-    restartTask(newTaskname) {
-      // Arrêt de la tâche en cours si besoin
-      if (this.isTaskInProgress) {
-        this.stopTask();
-      }
-      // Lancement de la nouvelle tâche
-      this.$nextTick(function () {
-        this.taskname = newTaskname;
-        this.startTask();
-      });
     },
     durationBetweenTimestamps(start, end) {
       let seconds = Math.floor(end / 1000 - start / 1000);
