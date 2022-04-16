@@ -123,7 +123,7 @@ h3 {
 }
 li.el-menu-item.is-active {
   color: white;
-  background-color: red;
+  background-color: #f99829;
 }
 
 // Effet vue tracker menu
