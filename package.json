@@ -11,7 +11,7 @@
     "@element-plus/icons-vue": "^0.2.7",
     "@lukeed/uuid": "^2.0.0",
     "axios": "^0.26.0",
-    "element-plus": "^2.0.2",
+    "element-plus": "^2.1.9",
     "vue": "^3.2.31",
     "vue-router": "^4.0.14",
     "vuex": "^4.0.2"
