@@ -57,12 +57,22 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+//import TimestampsMixin from "../mixins/timestamps.js";
+import { useTimestamps } from "../features/useTimestamps.js";
+
 export default {
   data() {
     return {
       nowTime: null,
       intervalEverySecond: null,
       errorMsg: null,
+    };
+  },
+  // mixins: [TimestampsMixin],
+  setup() {
+    const { durationBetweenTimestamps } = useTimestamps();
+    return {
+      durationBetweenTimestamps,
     };
   },
   computed: {

@@ -1,14 +1,6 @@
 <template>
   <el-scrollbar>
-    <el-menu
-      :router="true"
-      :default-active="
-        ($route.matched[0] && $route.matched[0].path == '/') ||
-        $route.path == '/home'
-          ? '/'
-          : $route.path
-      "
-    >
+    <el-menu :router="true" :default-active="activeRoute">
       <div class="wrapper">
         <a class="title-app" href="/"
           ><h3>VUE TRACKER {{ countPlusOne }}</h3></a
@@ -90,7 +82,26 @@ import zhCn from "element-plus/lib/locale/lang/zh-cn";
 
 import { mapState } from "vuex";
 
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+
 export default defineComponent({
+  setup() {
+    const route = useRoute();
+    const activeRoute = computed(() => {
+      if (route.path == "/home") {
+        return "/";
+      } else if (route.matched[0] && $route.matched[0].path == "/") {
+        return "/";
+      } else {
+        return route.path;
+      }
+    });
+    return {
+      activeRoute,
+    };
+  },
+
   components: {
     ElConfigProvider,
   },

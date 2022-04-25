@@ -1,5 +1,6 @@
 <template>
-  <h2 class="titre-settings-app">Application</h2>
+  <SettingsAppComposition />
+  <h2 class="titre-settings-app">Application(Options API)</h2>
   <el-row>
     <el-col :offset="6" :span="12">
       <p class="para-settings-app">Clé secrète de votre API JSONbin.io :</p>

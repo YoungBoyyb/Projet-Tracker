@@ -46,7 +46,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="right" label="Actions" width="150">
+      <el-table-column align="right" label="Actions" width="425">
         <template #header></template>
         <template #default="scope">
           <TaskListActions :taskID="scope.row.id" :taskname="scope.row.name" />
@@ -59,9 +59,20 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import TaskListActions from "./TaskListActions.vue";
+import { useTimestamps } from "../features/useTimestamps.js";
+
 export default {
   components: {
     TaskListActions,
+  },
+  setup() {
+    const { durationBetweenTimestamps, formatTimestamp, fullDateFormatter } =
+      useTimestamps();
+    return {
+      durationBetweenTimestamps,
+      formatTimestamp,
+      fullDateFormatter,
+    };
   },
   data() {
     return {
