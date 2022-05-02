@@ -201,12 +201,7 @@ form {
   text-align: left;
   vertical-align: middle;
 }
-.bloc-form {
-  margin: auto;
-  width: 70%;
-  margin-block-start: 0.83em;
-  margin-block-end: 0.83em;
-}
+
 fieldset {
   border: none;
 }
@@ -256,6 +251,12 @@ h2 {
 }
 
 /**Form  */
+.bloc-form {
+  margin: auto;
+  width: 70%;
+  margin-block-start: 0.83em;
+  margin-block-end: 0.83em;
+}
 label {
   color: #550203;
 }
@@ -414,5 +415,24 @@ p.link-connexion {
   background: #550203;
   color: white;
   box-shadow: 8px 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 480px) {
+  h1 {
+    color: #550203;
+    font-size: 45px;
+    letter-spacing: 15px;
+  }
+  .bloc-form {
+    width: 100%;
+    padding: 0px 20px;
+  }
+  .el-col-offset-6 {
+    margin-left: 0%;
+  }
+  .el-col-12 {
+    max-width: 100%;
+    flex: 0 0 100%;
+  }
 }
 </style>

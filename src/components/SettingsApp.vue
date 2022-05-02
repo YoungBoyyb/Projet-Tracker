@@ -31,8 +31,9 @@ import { updateAxiosInstance } from "../services/TaskService.js";
 export default {
   data() {
     return {
-      inputValueJsonBinKey: "",
-      inputValueJsonBinID: "",
+      inputValueJsonBinKey:
+        "$2b$10$h0FXaFhS5UPVbUVLMrGFnubIvJQGGZO4egLoLHcPm69aeSjUI6/Mu",
+      inputValueJsonBinID: "624768131a1b610f0849f5ac",
       areNewValuesBeingTested: false,
     };
   },
