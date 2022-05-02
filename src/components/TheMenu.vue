@@ -3,7 +3,7 @@
     <el-menu :router="true" :default-active="activeRoute">
       <div class="wrapper">
         <a class="title-app" href="/"
-          ><h3>VUE TRACKER {{ countPlusOne }}</h3></a
+          ><h3>Tracker Co {{ countPlusOne }}</h3></a
         >
       </div>
 

@@ -16,7 +16,7 @@
         :icon="Edit"
         circle
         ><el-icon
-          ><video-play /><svg
+          ><svg
             class="icon"
             width="200"
             height="200"
@@ -37,7 +37,7 @@
         :icon="Edit"
         circle
         ><el-icon
-          ><video-pause /><svg
+          ><svg
             class="icon"
             width="200"
             height="200"
@@ -57,22 +57,23 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-//import TimestampsMixin from "../mixins/timestamps.js";
 import { useTimestamps } from "../features/useTimestamps.js";
+import { useIncrementalTimer } from "../features/useIncrementalTimer.js";
 
 export default {
-  data() {
-    return {
-      nowTime: null,
-      intervalEverySecond: null,
-      errorMsg: null,
-    };
-  },
-  // mixins: [TimestampsMixin],
   setup() {
+    const { nowTime, startTimer, stopTimer } = useIncrementalTimer();
     const { durationBetweenTimestamps } = useTimestamps();
     return {
       durationBetweenTimestamps,
+      nowTime,
+      startTimer,
+      stopTimer,
+    };
+  },
+  data() {
+    return {
+      errorMsg: null,
     };
   },
   computed: {
@@ -99,14 +100,10 @@ export default {
   watch: {
     isTaskInProgress(isInProgress) {
       if (isInProgress) {
-        this.nowTime = Date.now();
-        this.intervalEverySecond = setInterval(() => {
-          this.nowTime = Date.now();
-        }, 1000);
+        this.startTimer();
       } else {
         this.errorMsg = null;
-        this.nowTime = null;
-        clearInterval(this.intervalEverySecond);
+        this.stopTimer();
       }
     },
     errorMsg(newVal) {
@@ -157,17 +154,6 @@ export default {
         this.beforeStartTask();
       }
     },
-    durationBetweenTimestamps(start, end) {
-      let seconds = Math.floor(end / 1000 - start / 1000);
-      let minutes = Math.floor(seconds / 60);
-      const hours = Math.floor(minutes / 60);
-      seconds = seconds % 60;
-      minutes = minutes % 60;
-      return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
-        2,
-        "0"
-      )}:${String(seconds).padStart(2, "0")}`;
-    },
   },
 };
 </script>
@@ -183,6 +169,7 @@ export default {
   span {
     padding-left: 20px;
   }
+  margin: auto;
 }
 .el-row {
   display: flex;

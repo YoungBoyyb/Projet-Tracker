@@ -1,78 +1,133 @@
 <template>
   <div>
-    <h2>Connecte toi</h2>
+    <h2>Inscris-Toi</h2>
     <el-row class="bloc-form">
       <el-col :span="12" :offset="6" class="back-form">
         <form action="/" method="get" @submit.prevent="sendForm">
-          <BaseInput
-            label="Adresse email"
-            v-model="email"
-            placeholder="Entre ton e-mail ici"
-            type="email"
-            id="email"
-            aria-describedby="emailError"
-            :aria-invalid="v$.email.$invalid"
-          />
-          <el-alert
-            v-if="v$.email.$error"
-            :title="v$.email.$error ? v$.email.$errors[0].$message : ''"
-            type="error"
-            :closable="false"
-            id="emailError"
-          ></el-alert>
+          <fieldset>
+            <legend>Informations de connexion</legend>
 
-          <BaseInput
-            label="Mot de passe"
-            v-model="password"
-            placeholder="********"
-            type="password"
-            id="password"
-            aria-describedby="passwordError"
-            :aria-invalid="v$.password.$invalid"
-          />
-          <el-alert
-            v-if="v$.password.$error"
-            :title="v$.password.$error ? v$.password.$errors[0].$message : ''"
-            type="error"
-            :closable="false"
-            id="passwordError"
-          ></el-alert>
-
-          <div>
-            <el-button
-              type="primary"
-              native-type="submit"
-              :loading="loading"
-              @click.prevent="sendForm"
-              class="button-connexion"
-              ><span class="span-bouton-co">Confirmer</span>
-            </el-button>
+            <BaseInput
+              label="Adresse e-mail"
+              v-model="email"
+              placeholder="Entre ton e-mail ici"
+              type="email"
+              id="email"
+              aria-describedby="emailError"
+              :aria-invalid="v$.email.$invalid"
+            />
             <el-alert
-              v-if="apiError"
-              :title="apiError"
+              v-if="v$.email.$error"
+              :title="v$.email.$error ? v$.email.$errors[0].$message : ''"
               type="error"
               :closable="false"
+              id="emailError"
             ></el-alert>
-          </div>
+
+            <BaseInput
+              label="Mot de passe"
+              v-model="password"
+              placeholder="********"
+              type="password"
+              id="password"
+              aria-describedby="passwordError"
+              :aria-invalid="v$.password.$invalid"
+            />
+            <el-alert
+              v-if="v$.password.$error"
+              :title="v$.password.$error ? v$.password.$errors[0].$message : ''"
+              type="error"
+              :closable="false"
+              id="passwordError"
+            ></el-alert>
+
+            <BaseInput
+              label="Confirme ton mot de passe"
+              v-model="passwordConfirm"
+              placeholder="********"
+              type="password"
+              id="passwordConfirm"
+              aria-describedby="passwordConfirmError"
+              :aria-invalid="v$.passwordConfirm.$invalid"
+            />
+            <el-alert
+              v-if="v$.passwordConfirm.$error"
+              :title="
+                v$.passwordConfirm.$error
+                  ? v$.passwordConfirm.$errors[0].$message
+                  : ''
+              "
+              type="error"
+              :closable="false"
+              id="passwordConfirmError"
+            ></el-alert>
+          </fieldset>
+
+          <fieldset>
+            <legend>Finalisation de l'inscription</legend>
+
+            <BaseCheckbox
+              v-model="termsOfUse"
+              aria-describedby="termsOfUseError"
+              :aria-invalid="v$.termsOfUse.$invalid"
+              class="conditions-text"
+            >
+              Conditions d'utilisation
+            </BaseCheckbox>
+            <el-alert
+              v-if="v$.termsOfUse.$error"
+              :title="
+                v$.termsOfUse.$error ? v$.termsOfUse.$errors[0].$message : ''
+              "
+              type="error"
+              :closable="false"
+              id="termsOfUseError"
+            ></el-alert>
+
+            <div>
+              <el-button
+                type="primary"
+                native-type="submit"
+                :loading="loading"
+                @click.prevent="sendForm"
+                class="button-inscription"
+                ><span class="span-bouton-in">Confirmer</span></el-button
+              >
+              <el-alert
+                v-if="apiError"
+                :title="apiError"
+                type="error"
+                :closable="false"
+              ></el-alert>
+            </div>
+          </fieldset>
         </form>
       </el-col>
     </el-row>
   </div>
-  <p class="link-inscription">
-    Pas encore de compte ? <a href="/register">Inscris-toi</a>
+  <p class="link-connexion">
+    Tu as un compte ? <a href="/login">Connecte-toi</a>
   </p>
 </template>
 
 <script>
-import { reactive, toRefs } from "vue";
+import { reactive, toRef, toRefs, watch } from "vue";
 import { useVuelidate } from "@vuelidate/core";
-import { required, email, minLength } from "../utils/validators.js";
+import {
+  required,
+  email,
+  minLength,
+  sameAsPassword,
+  sameAsTrue,
+} from "../utils/validators.js";
 import BaseInput from "../components/BaseInput.vue";
+import BaseCheckbox from "../components/BaseCheckbox.vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 export default {
   components: {
     BaseInput,
+    BaseCheckbox,
   },
   setup() {
     const router = useRouter();
@@ -81,6 +136,8 @@ export default {
     const state = reactive({
       email: "",
       password: "",
+      passwordConfirm: "",
+      termsOfUse: false,
       loading: false,
       apiError: null,
     });
@@ -93,26 +150,40 @@ export default {
         required,
         minLength: minLength(8),
       },
+      passwordConfirm: {
+        required,
+        sameAsPassword: sameAsPassword(toRef(state, "password")),
+      },
+      termsOfUse: {
+        required,
+        sameAsTrue,
+      },
     };
-
     const v$ = useVuelidate(rules, state, { $autoDirty: true });
-
     const sendForm = async () => {
       v$.value.$touch();
+      state.apiError = null;
       if (!v$.value.$error) {
         state.loading = true;
-        const res = await store.dispatch("users/login", {
+        const res = await store.dispatch("users/register", {
           email: state.email,
           password: state.password,
         });
         if (res === true) {
-          router.push("/");
+          router.push("/settings/app");
         } else {
           state.apiError = res;
         }
         state.loading = false;
       }
     };
+    // Ré-éxecution des validators de passwordConfirm si password change après-coup
+    watch(toRef(state, "password"), () => {
+      if (v$.value.passwordConfirm.$dirty) {
+        v$.value.passwordConfirm.$reset();
+        v$.value.passwordConfirm.$touch();
+      }
+    });
     return {
       ...toRefs(state),
       v$,
@@ -147,9 +218,6 @@ legend {
   display: block;
   max-width: 80%;
   margin: 10px 0;
-}
-.el-checkbox {
-  margin: 20px 0 0;
 }
 .el-button {
   margin-top: 25px;
@@ -218,8 +286,21 @@ input:focus {
   border: 1px solid white !important;
 }
 
+/**Conditions button */
+
+span.el-checkbox__label {
+  color: #550203;
+}
+.el-checkbox__input.is-checked + .el-checkbox__label {
+  color: #550203;
+}
+.el-checkbox__input.is-checked .el-checkbox__inner {
+  background-color: #550203;
+  border-color: #550203;
+}
+
 /**Button */
-.button-connexion {
+.button-inscription {
   all: unset;
   width: 100px;
   height: 30px;
@@ -240,8 +321,8 @@ input:focus {
   touch-action: manipulation;
 }
 
-.button-connexion::after,
-.button-connexion::before {
+.button-inscription::after,
+.button-inscription::before {
   content: "";
   position: absolute;
   bottom: 0;
@@ -250,7 +331,7 @@ input:focus {
   transition: all 0.4s;
 }
 
-.button-connexion::before {
+.button-inscription::before {
   transform: translate(0%, 0%);
   width: 100%;
   height: 100%;
@@ -258,7 +339,7 @@ input:focus {
   border-radius: 10px;
 }
 
-.button-connexion::after {
+.button-inscription::after {
   transform: translate(10px, 10px);
   width: 35px;
   height: 35px;
@@ -268,25 +349,25 @@ input:focus {
   border-radius: 50px;
 }
 
-.button-connexion:hover::before {
+.button-inscription:hover::before {
   transform: translate(5%, 20%);
   width: 110%;
   height: 110%;
   color: #550203;
 }
-.button-connexion:hover {
+.button-inscription:hover {
   color: #550203;
   height: 30px;
 }
 
-.button-connexion:hover::after {
+.button-inscription:hover::after {
   border-radius: 10px;
   transform: translate(0, 0);
   width: 110vh;
   height: 100%;
 }
 
-.button-connexion:active::after {
+.button-inscription:active::after {
   transition: 0s;
   transform: translate(0, 5%);
 }
@@ -308,10 +389,10 @@ span.span-bouton-co:hover {
 }
 
 /** Lien inscription */
-p.link-inscription {
+p.link-connexion {
   color: #550203;
 }
-.link-inscription a {
+.link-connexion a {
   color: #550203;
   text-decoration: none;
   border-bottom: 0.125em solid white;
@@ -321,13 +402,13 @@ p.link-inscription {
   transition: all 0.4s;
 }
 
-.link-inscription a:hover {
+.link-connexion a:hover {
   border-bottom: 0.125em solid #550203;
   box-shadow: inset 0 -1.125em 0 #550203;
   color: white;
 }
 
-.link-inscription a:focus {
+.link-connexion a:focus {
   background: #550203;
   outline: none;
   background: #550203;

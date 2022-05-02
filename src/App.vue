@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container v-if="$route.meta.layout" class="mainContainer">
     <el-aside width="200px">
       <TheMenu />
     </el-aside>
@@ -12,6 +12,13 @@
       </el-main>
     </el-container>
   </el-container>
+
+  <div v-else-if="$route.meta.layout === false" class="mainContainer">
+    <h1 class="titleNoLayout">TRACKER.CO</h1>
+    <router-view></router-view>
+  </div>
+
+  <div v-else class="mainContainer" v-loading="true"></div>
 </template>
 
 <script>
@@ -20,8 +27,6 @@ import { mapState, mapActions, mapMutations } from "vuex";
 import TheMenu from "./components/TheMenu.vue";
 import TheTopTask from "./components/TheTopTask.vue";
 import TaskList from "./components/TaskList.vue";
-
-import zhCn from "element-plus/lib/locale/lang/zh-cn";
 
 export default {
   components: {
@@ -55,6 +60,7 @@ export default {
   },
   methods: {
     ...mapActions({
+      setWatcherCurrentUser: "users/setWatcherCurrentUser",
       fetchAllTasks: "tasks/fetchAllTasks",
       updateAllTasks: "tasks/updateAllTasks",
       sendError: "notifications/sendError",
@@ -64,6 +70,8 @@ export default {
     }),
   },
   async created() {
+    // Mise en place de l'actualisation de l'utilisateur actuel
+    this.setWatcherCurrentUser();
     // Mise en place du système de notification
     this.SET_NOTIFIER(this.$notify);
     // Récupération de toutes les tâches
@@ -81,6 +89,12 @@ export default {
 </script>
 
 <style scoped>
+.mainContainer {
+  height: 100%;
+}
+.titleNoLayout {
+  margin: 15px auto;
+}
 .layout-container-demo .el-header {
   position: relative;
   background-color: #b3c0d1;
@@ -137,41 +151,48 @@ tr.el-table__row:hover {
   --el-color-primary: #f99829;
   --el-text-color-placeholder: #00000054;
   --el-input-text-color: black !important;
+  --el-color-success-light-3: white !important;
 }
 //
-@font-face {
-  font-family: "Grape Nuts";
-  src: url("../font/GrapeNuts-Regular.ttf");
+body {
+  margin: 0;
+  background-color: white;
 }
 @font-face {
-  font-family: "Oswald";
-  src: url("../font/Oswald-VariableFont_wght.ttf");
+  font-family: "BebasNeue";
+  src: url("../font/BebasNeue Bold.ttf");
 }
-
+@font-face {
+  font-family: "Montserrat";
+  src: url("../font/Montserrat-Regular.ttf");
+}
+@font-face {
+  font-family: "Helvetica";
+  src: url("../font/Helvetica.ttf");
+}
 p.el-loading-text {
-  font-family: "Grape Nuts";
+  font-family: "Helvetica";
   font-size: 20px !important;
   font-weight: bold;
 }
-
-body {
-  margin: 0;
-  background-color: black;
+h1 {
+  font-family: "BebasNeue";
 }
 #app {
-  font-family: Oswald;
-  letter-spacing: 1px;
+  font-family: Montserrat;
+  letter-spacing: 0.8px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
 }
 input {
-  font-family: Oswald;
-  letter-spacing: 1px;
+  font-family: Montserrat;
+  letter-spacing: 0.5px;
 }
 .el-aside {
   border-right: 3px solid #f99829;
+  min-height: 100vh;
 }
 .el-scrollbar {
   background-color: black;
@@ -224,15 +245,15 @@ tr .cell {
   position: absolute;
 }
 .el-notification__title {
-  font-family: Oswald;
+  font-family: Helvetica;
   letter-spacing: 1px;
 }
 p {
-  font-family: Oswald;
+  font-family: Helvetica;
   letter-spacing: 1px;
 }
 span {
-  font-family: Oswald;
+  font-family: Helvetica;
   letter-spacing: 1px;
   font-weight: 100;
 }
@@ -240,5 +261,10 @@ span {
 i.el-icon.el-sub-menu__icon-arrow svg.icon {
   color: #f99829 !important;
   font-size: 16px;
+}
+/**Alert */
+.el-alert--error.is-light {
+  background-color: white !important;
+  color: #fb0b0c !important;
 }
 </style>

@@ -52,16 +52,9 @@ export default {
       await TaskService.updateAll(state.tasks);
     },
 
-    deleteTask({ state, commit }, taskID) {
-      // Récupération de l'index de la tâche
-      let taskIndex = null;
-      state.tasks.forEach((task, index) => {
-        if (task.id === taskID) {
-          taskIndex = index;
-        }
-      });
-
+    deleteTask({ getters, commit }, taskID) {
       // Suppression de la tâche
+      const taskIndex = getters.getTaskIndexByID(taskID);
       commit("DELETE_TASK", taskIndex);
     },
 
@@ -85,7 +78,7 @@ export default {
       commit("SET_CURRENT_TASKNAME", "");
     },
 
-    restartTask({ state, commit, dispatch }, newTaskname) {
+    restartTask({ state, getters, commit, dispatch }, taskID) {
       // Arrêt de la tâche en cours si besoin
       if (state.isTaskInProgress) {
         dispatch("stopTask");
@@ -93,6 +86,7 @@ export default {
 
       // Lancement de la nouvelle tâche
       setTimeout(() => {
+        const newTaskname = getters.getTaskByID(taskID).name;
         commit("SET_CURRENT_TASKNAME", newTaskname);
         dispatch("startTask");
       });
@@ -113,6 +107,12 @@ export default {
       } else {
         return {};
       }
+    },
+    getTaskByID: (state) => (id) => {
+      return state.tasks.find((task) => task.id === id);
+    },
+    getTaskIndexByID: (state, getters) => (id) => {
+      return state.tasks.indexOf(getters.getTaskByID(id));
     },
   },
 };
