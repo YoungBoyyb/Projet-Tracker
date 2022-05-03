@@ -59,7 +59,7 @@
     </el-row>
   </div>
   <p class="link-inscription">
-    Pas encore de compte ? <a href="/register">Inscris-toi</a>
+    Pas encore de compte ? <a href="./register">Inscris-toi</a>
   </p>
 </template>
 

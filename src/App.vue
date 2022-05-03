@@ -89,6 +89,19 @@ export default {
 </script>
 
 <style scoped>
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: table;
+}
+body {
+  display: table-cell;
+  vertical-align: middle;
+  background: #ffb5c2;
+}
 .mainContainer {
   height: 100%;
 }
@@ -123,13 +136,14 @@ export default {
 }
 .el-table {
   --el-table-tr-bg-color: transparent;
-  --el-table-border-color: #f99829;
-  --el-table-border: 1px solid #f99829;
-  --el-table-text-color: #f99829;
-  --el-table-header-bg-color: #f99829 !important;
+  --el-table-border-color: #550203;
+  --el-table-border: 1px solid #550203;
+  --el-table-text-color: #550203;
+  --el-table-header-bg-color: #550203 !important;
   --el-table-header-text-color: white;
   --el-table-row-hover-bg-color: var(--el-bg-color);
   --el-table-current-row-bg-color: var(--el-color-primary-light-9);
+  --el-bg-color: #55020363 !important;
 }
 tr.el-table__row:hover {
   --el-table-text-color: red !important;
@@ -142,16 +156,21 @@ tr.el-table__row:hover {
 
 <style lang="scss">
 .highlight-line {
-  background-color: #f9982944 !important;
+  background-color: #55020363 !important;
 }
+tr.el-table__row.highlight-line .cell {
+  color: white;
+}
+
 // :root racine
 :root {
-  --el-text-color-regular: #f99829;
+  --el-text-color-regular: #550203;
   --el-popper-border-radius: 0px;
-  --el-color-primary: #f99829;
+  --el-color-primary: #550203;
   --el-text-color-placeholder: #00000054;
   --el-input-text-color: black !important;
   --el-color-success-light-3: white !important;
+  --el-color-primary: white !important;
 }
 //
 body {
@@ -171,7 +190,7 @@ body {
   src: url("../font/Helvetica.ttf");
 }
 p.el-loading-text {
-  font-family: "Helvetica";
+  font-family: "Montserrat";
   font-size: 20px !important;
   font-weight: bold;
 }
@@ -191,19 +210,22 @@ input {
   letter-spacing: 0.5px;
 }
 .el-aside {
-  border-right: 3px solid #f99829;
+  border-right: 3px solid #550203;
   min-height: 100vh;
 }
 .el-scrollbar {
-  background-color: black;
+  background-color: #ffb5c2;
 }
 .el-header {
-  background-color: #f99829;
+  background-color: transparent;
   .el-input .el-input__inner {
     border: none !important;
     background-color: transparent;
-    color: white !important;
-    --el-input-placeholder-color: white;
+    color: #550203 !important;
+    --el-input-placeholder-color: #550203;
+    border: 2px solid #ffb5c2 !important;
+    box-shadow: 0 0 0 1px #ffb5c2 inset;
+    box-shadow: #ffb5c2 0px 3px 6px, #ffb5c2 0px 3px 6px;
   }
 }
 tr .cell {
@@ -214,19 +236,34 @@ tr .cell {
 }
 
 .el-button.button-copy {
-  background-color: #f99829;
+  background-color: #8338ec;
   color: white;
-  border-color: #f99829;
+  border-color: #8338ec;
+}
+.el-button.button-copy:hover {
+  background-color: white;
+  color: #8338ec;
+  border-color: #8338ec;
 }
 .el-button.button-play {
-  background-color: #4ca9e5;
+  background-color: #3a86ff;
   color: white;
-  border-color: #4ca9e5;
+  border-color: #3a86ff;
+}
+.el-button.button-play:hover {
+  background-color: white;
+  color: #3a86ff;
+  border-color: #3a86ff;
 }
 .el-button.button-stop {
-  background-color: #f0340f;
+  background-color: #d80032;
   color: white;
-  border-color: #f0340f;
+  border-color: #d80032;
+}
+.el-button.button-stop:hover {
+  background-color: white;
+  color: #d80032;
+  border-color: #d80032;
 }
 
 .el-loading-spinner .path {
@@ -245,21 +282,21 @@ tr .cell {
   position: absolute;
 }
 .el-notification__title {
-  font-family: Helvetica;
+  font-family: Montserrat;
   letter-spacing: 1px;
 }
 p {
-  font-family: Helvetica;
+  font-family: Montserrat;
   letter-spacing: 1px;
 }
 span {
-  font-family: Helvetica;
+  font-family: Montserrat;
   letter-spacing: 1px;
   font-weight: 100;
 }
 // Arrow menu paramètres
 i.el-icon.el-sub-menu__icon-arrow svg.icon {
-  color: #f99829 !important;
+  color: #550203 !important;
   font-size: 16px;
 }
 /**Alert */

@@ -169,13 +169,16 @@ export default {
   span {
     padding-left: 20px;
   }
-  margin: auto;
 }
-.el-row {
-  display: flex;
-  position: relative;
-  box-sizing: border-box;
-  flex-wrap: wrap;
-  justify-content: center;
+
+@media (max-width: 1200px) {
+  .el-row {
+    display: flex;
+    position: relative;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-direction: column;
+  }
 }
 </style>

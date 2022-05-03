@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1><a>Accueil</a></h1>
     <TaskList />
   </div>
 </template>

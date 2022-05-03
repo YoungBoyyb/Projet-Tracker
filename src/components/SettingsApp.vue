@@ -1,27 +1,29 @@
 <template>
-  <SettingsAppComposition />
-  <h2 class="titre-settings-app">Application(Options API)</h2>
-  <el-row>
-    <el-col :offset="6" :span="12">
-      <p class="para-settings-app">Clé secrète de votre API JSONbin.io :</p>
-      <el-input
-        placeholder="Entrer votre API KEY"
-        v-model="inputValueJsonBinKey"
-      ></el-input>
-      <p class="para-settings-app">ID de votre bin :</p>
-      <el-input
-        placeholder="Entrer votre BIN ID"
-        v-model="inputValueJsonBinID"
-      ></el-input>
-      <el-button
-        type="primary"
-        @click="updateApiValues"
-        :loading="areNewValuesBeingTested"
-        class="bouton-confirmation"
-        >Confirmer</el-button
-      >
-    </el-col>
-  </el-row>
+  <div class="main-settings-app">
+    <SettingsAppComposition />
+    <h3 class="titre-settings-app">Application(Options API)</h3>
+    <el-row>
+      <el-col :offset="6" :span="12">
+        <p class="para-settings-app">Clé secrète de votre API JSONbin.io :</p>
+        <el-input
+          placeholder="Entrer votre API KEY"
+          v-model="inputValueJsonBinKey"
+        ></el-input>
+        <p class="para-settings-app">ID de votre bin :</p>
+        <el-input
+          placeholder="Entrer votre BIN ID"
+          v-model="inputValueJsonBinID"
+        ></el-input>
+        <el-button
+          type="primary"
+          @click="updateApiValues"
+          :loading="areNewValuesBeingTested"
+          class="bouton-confirmation"
+          >Confirmer</el-button
+        >
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
 <script>
@@ -31,9 +33,8 @@ import { updateAxiosInstance } from "../services/TaskService.js";
 export default {
   data() {
     return {
-      inputValueJsonBinKey:
-        "$2b$10$h0FXaFhS5UPVbUVLMrGFnubIvJQGGZO4egLoLHcPm69aeSjUI6/Mu",
-      inputValueJsonBinID: "624768131a1b610f0849f5ac",
+      inputValueJsonBinKey: "",
+      inputValueJsonBinID: "",
       areNewValuesBeingTested: false,
     };
   },
@@ -97,10 +98,10 @@ export default {
 </style>
 <style lang="scss">
 .titre-settings-app {
-  color: #f99829;
+  color: #550203;
 }
 .para-settings-app {
-  color: #f99829;
+  color: #550203;
 }
 p {
   text-align: left;
@@ -108,21 +109,28 @@ p {
 
 input.el-input__inner {
   border-radius: 0px;
+  background: white;
+  border: 2px solid #550203;
+  color: #550203;
 }
 .bouton-confirmation {
-  background: #f99829;
-  border: 1px solid #f99829;
+  background: #550203;
+  border: 2px solid #550203;
   border-radius: 50px;
-  padding: 20px 25px;
   transition: 0.4 !important;
 }
 .el-button:focus,
 .el-button:hover {
-  background-color: white;
-  color: black;
-  border-color: white;
+  background-color: transparent;
+  color: #550203;
+  border-color: #550203;
 }
 .bouton-confirmation span {
-  font-size: 16px;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+.main-settings-app {
+  margin-top: 50vh;
+  transform: translateY(-90%);
 }
 </style>

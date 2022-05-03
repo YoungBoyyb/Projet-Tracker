@@ -3,7 +3,7 @@
     <el-menu :router="true" :default-active="activeRoute">
       <div class="wrapper">
         <a class="title-app" href="/"
-          ><h3>Tracker Co {{ countPlusOne }}</h3></a
+          ><h1>Tracker.Co {{ countPlusOne }}</h1></a
         >
       </div>
 
@@ -32,7 +32,7 @@
         ></el-icon>
         <span>Tracker</span>
       </el-menu-item>
-      <el-menu-item index="2" disabled>
+      <!--<el-menu-item index="2" disabled>
         <el-icon
           ><folder-opened /><svg
             class="icon"
@@ -48,7 +48,7 @@
             ></path></svg
         ></el-icon>
         <span>Catégories</span>
-      </el-menu-item>
+      </el-menu-item>-->
       <el-sub-menu index="/settings">
         <template #title>
           <el-icon
@@ -123,23 +123,20 @@ export default defineComponent({
 .el-menu {
   border-right: none;
   text-align: left;
-  background-color: black;
+  background-color: #ffb5c2;
 }
 li.el-menu-item {
-  color: #f99829;
+  color: #550203;
 }
-h3 {
-  text-align: center;
-  color: #f99829;
-}
+
 li.el-menu-item.is-active {
   color: white;
-  background-color: #f99829;
+  background-color: #550203;
 }
 
 // Effet vue tracker menu
 .title-app {
-  color: #f99829;
+  color: #550203;
   text-decoration: none;
   transition: 0.4s;
 }
@@ -147,13 +144,14 @@ li.el-menu-item.is-active {
   transition: 0.4s;
 }
 
-h3 {
+h1 {
   font-weight: 500;
   transition: 0.4s;
   margin: 0em !important;
-  padding: 1em;
+  padding: 0.8em;
+  font-size: 2em;
 }
-h3:hover {
+h1:hover {
   font-weight: 500;
   transition: 0.4s;
 
@@ -163,19 +161,19 @@ h3:hover {
   text-align: center;
   transition: 0.8s;
   a {
-    color: #f99829;
+    color: #550203;
     text-transform: uppercase;
     background: linear-gradient(
       to right,
-      #f99829 20%,
-      #000000 60%,
+      #550203 20%,
+      #ffb5c2 60%,
       #ffffff 20%
     );
     font-weight: 500;
     background-size: auto auto;
     background-clip: border-box;
     background-size: 200% auto;
-    color: #f99829;
+    color: #550203;
     background-clip: text;
     text-fill-color: transparent;
     -webkit-background-clip: text;
@@ -184,19 +182,19 @@ h3:hover {
     display: inline-block;
   }
   a:hover {
-    color: #f99829;
+    color: #550203;
     text-transform: uppercase;
     background: linear-gradient(
       to right,
-      #000000 20%,
+      #550203 20%,
       #ffffff 60%,
-      #f99829 20%
+      #ffb5c2 20%
     );
     font-weight: 500;
     background-size: auto auto;
     background-clip: border-box;
     background-size: 200% auto;
-    color: #f99829;
+    color: #550203;
     background-clip: text;
     text-fill-color: transparent;
     -webkit-background-clip: text;
@@ -220,14 +218,14 @@ a.title-app {
 // Sous menu
 .el-sub-menu__title i,
 .span-params {
-  color: #f99829;
+  color: #550203;
 }
 li.el-menu-item {
-  background: black;
+  background: #ffb5c2;
 }
 li.el-menu-item:hover {
   background: white;
-  color: #f99829;
+  color: #550203;
 }
 li.el-sub-menu.is-opened {
   background: white;
